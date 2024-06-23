@@ -110,7 +110,7 @@ const StructGenius = () => {
         <Zap className="inline-block mr-2 text-yellow-500" size={36} />
         StructGenius
       </h1>
-      <h2 className="text-xl text-gray-600 mb-6">AI-Powered Project Structuring for Coding Geniuses</h2>
+      <h2 className="text-xl text-gray-600 mb-6">Streamline Your Project, Amplify Your Genius</h2>
       
       <div className="mb-6 p-4 bg-blue-100 border border-blue-500 rounded shadow-md">
         <div className="flex items-center mb-3">
@@ -118,9 +118,10 @@ const StructGenius = () => {
           <h2 className="text-2xl font-semibold">How to Use StructGenius</h2>
         </div>
         <p className="mb-3">
-          Unleash your coding potential with StructGenius! Perfect for students and developers using AI language models (LLMs) in their projects. Here's how to get started:
+          Unleash your coding potential with StructGenius! Perfect for students and developers using AI language model (LLMs) tools in their projects. Here's how to get started:
         </p>
         <ol className="list-decimal list-inside mb-3 space-y-2">
+          <li>Finish discussing and planning a project and its code with your LLM</li>
           <li>Ask your LLM to "print out a tree structure of our current code"</li>
           <li>Paste your LLM-generated file structure into the text area below</li>
           <li>Click "Generate Structure" to visualize your project blueprint</li>
