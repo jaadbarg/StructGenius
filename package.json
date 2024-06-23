@@ -1,0 +1,14 @@
+{
+  "name": "tree-gen",
+  "version": "1.0.0",
+  "description": "Generate a .zip download of the tree structure your LLM gave you to get started faster!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tfwtf",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1"
+  }
+}
