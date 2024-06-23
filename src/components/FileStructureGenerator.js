@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Folder, File, Download, Info, Shield, Coffee } from 'lucide-react';
+import { Folder, File, Download, Info, Shield, Coffee, Edit, Save, X } from 'lucide-react';
 import JSZip from 'jszip';
 
 const FileStructureGenerator = () => {
   const [input, setInput] = useState('');
   const [structure, setStructure] = useState(null);
   const [error, setError] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [fileContent, setFileContent] = useState('');
+  const [fileContents, setFileContents] = useState({});
 
   const generateStructure = () => {
     try {
@@ -40,14 +43,38 @@ const FileStructureGenerator = () => {
   const renderTree = (node) => (
     <div key={node.name} className="ml-4">
       {node.isDirectory ? (
-        <Folder className="inline-block mr-2" size={16} />
+        <div className="flex items-center">
+          <Folder className="inline-block mr-2" size={16} />
+          <span>{node.name}</span>
+        </div>
       ) : (
-        <File className="inline-block mr-2" size={16} />
+        <div className="flex items-center">
+          <File className="inline-block mr-2" size={16} />
+          <span className="mr-2">{node.name}</span>
+          <button 
+            onClick={() => openFileEditor(node)}
+            className="p-1 bg-blue-100 rounded hover:bg-blue-200"
+          >
+            <Edit size={12} />
+          </button>
+        </div>
       )}
-      {node.name}
       {node.children && node.children.map(renderTree)}
     </div>
   );
+
+  const openFileEditor = (file) => {
+    setSelectedFile(file);
+    setFileContent(fileContents[file.name] || '');
+  };
+
+  const handleContentSave = () => {
+    setFileContents({
+      ...fileContents,
+      [selectedFile.name]: fileContent
+    });
+    setSelectedFile(null);
+  };
 
   const generateZip = async () => {
     const zip = new JSZip();
@@ -57,7 +84,7 @@ const FileStructureGenerator = () => {
       if (node.isDirectory) {
         node.children.forEach(child => addToZip(child, newPath));
       } else {
-        zip.file(newPath, ''); // Create an empty file
+        zip.file(newPath, fileContents[node.name] || ''); // Use custom content if available
       }
     };
 
@@ -93,7 +120,8 @@ const FileStructureGenerator = () => {
           <li>Ask your LLM to generate a tree diagram of a file structure. For example, you could say: "Give me a tree diagram of the file structure for a basic React application."</li>
           <li>Copy the output from the LLM and paste it into the text area below.</li>
           <li>Click "Generate Structure" to visualize the file structure.</li>
-          <li>Click "Download as Zip" to get a zip file with the empty file structure.</li>
+          <li>Click the edit icon next to any file to add custom content.</li>
+          <li>Click "Download as Zip" to get a zip file with the file structure and custom contents.</li>
         </ol>
         <p className="font-semibold">Example LLM Output:</p>
         <pre className="bg-gray-100 p-2 rounded text-sm">
@@ -152,6 +180,32 @@ const FileStructureGenerator = () => {
             <Download className="mr-2" size={16} />
             Download as Zip
           </button>
+        </div>
+      )}
+      
+      {selectedFile && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-lg w-2/3">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Edit {selectedFile.name}</h3>
+              <button onClick={() => setSelectedFile(null)}>
+                <X size={20} />
+              </button>
+            </div>
+            <textarea
+              className="w-full h-64 p-2 border rounded mb-4"
+              value={fileContent}
+              onChange={(e) => setFileContent(e.target.value)}
+              placeholder="Paste your file content here..."
+            />
+            <button
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center"
+              onClick={handleContentSave}
+            >
+              <Save className="mr-2" size={16} />
+              Save Content
+            </button>
+          </div>
         </div>
       )}
       
